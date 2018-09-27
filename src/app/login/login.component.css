@@ -1,0 +1,11 @@
+.login-panel {
+    width: 500px;
+    margin: auto;
+}
+.login-panel__form-field {
+    width: 100%;
+}
+mat-card-actions {
+    display: flex;
+    justify-content: space-between
+}
