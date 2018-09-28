@@ -1,4 +1,7 @@
 <div class="content">
+  <div class="admin__save-panel">
+    <a mat-raised-button color="warn" *ngIf="saveState" (click)="saveData()">Save all changes</a>
+  </div>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef> Mentor name </th>
@@ -20,6 +23,6 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
   <p>
-    <a mat-raised-button color="primary" (click)="openDialog()">Add new</a>
+    <a mat-raised-button color="primary" (click)="openDialog()">Add new mentor</a>
   </p>
 </div>

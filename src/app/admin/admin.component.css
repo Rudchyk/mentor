@@ -5,3 +5,7 @@ table {
     width: 24px;
     padding-right: 0;
 }
+.admin__save-panel {
+    text-align: right;
+    margin-bottom: 15px;
+}

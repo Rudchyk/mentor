@@ -1,7 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { MysqlService } from '../mysql.service';
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin',
@@ -13,22 +14,37 @@ export class AdminComponent implements OnInit {
   displayedColumns: string[] = ['name', 'occupation', 'edit'];
   dataSource = new BehaviorSubject([]);
 
+  saveState = false;
+
   ngOnInit() {
     this.fetchMentors();
   }
 
   fetchMentors(): void {
     this.mysqlService
-      .getMysqlData(this.dataSource)
+      .getMysqlData()
       .subscribe(
         (mentors: any) => this.dataSource.next(mentors),
         (error) => console.log(error)
       );
   }
 
+  saveData(): void {
+    this.mysqlService
+      .postMysqlData(this.dataSource.value)
+      .subscribe(
+        () => {
+          this.saveState = false;
+          this.router.navigate(['/admin']);
+        },
+        (error) => console.log(error)
+      );
+  }
+
   constructor(
     public dialog: MatDialog,
-    private mysqlService: MysqlService
+    private mysqlService: MysqlService,
+    private router: Router
   ) { }
 
   openDialog(value): void {
@@ -52,11 +68,13 @@ export class AdminComponent implements OnInit {
       console.log('The dialog was closed');
       if (result.id === '') {
         this.dataSource.next([...this.dataSource.getValue(), result]);
+        this.saveState = true;
       } else {
         this.dataSource.value.map(element => {
           if (element.id === result.id) {
             element.name = result.name;
             element.occupation = result.occupation;
+            this.saveState = true;
           }
         });
       }
@@ -74,11 +92,8 @@ export class DialogOverviewComponent {
 
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewComponent>,
-    private mysqlService: MysqlService,
     @Inject(MAT_DIALOG_DATA) public data
-  ) {
-    // console.log(this.data);
-  }
+  ) { }
 
   onNoClick(): void {
     this.dialogRef.close();

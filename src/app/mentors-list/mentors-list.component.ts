@@ -20,9 +20,9 @@ export class MentorsListComponent implements OnInit {
 
   fetchMentors(): void {
     this.mysqlService
-      .getMysqlData(this.mentors)
+      .getMysqlData()
       .subscribe(
-        (mentors) => this.mentors = mentors,
+        (mentors: any) => this.mentors = mentors,
         (error) => console.log(error)
       );
   }
