@@ -29,12 +29,13 @@ export class AdminComponent {
     public dialog: MatDialog
   ) { }
 
-  openDialog(goo): void {
-    console.log(goo);
-
+  openDialog(name, occupation): void {
     const dialogRef = this.dialog.open(DialogOverviewComponent, {
-      width: '250px',
-      data: {name: 'ddd', animal: 'dddd'}
+      width: '500px',
+      data: {
+        name,
+        occupation
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -47,12 +48,14 @@ export class AdminComponent {
 @Component({
   selector: 'app-dialog-overview',
   templateUrl: 'dialog-overview.html',
+  styleUrls: ['./dialog-overview.css']
 })
 export class DialogOverviewComponent {
 
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewComponent>,
-    @Inject(MAT_DIALOG_DATA) public data) {}
+    @Inject(MAT_DIALOG_DATA) public data
+  ) {}
 
   onNoClick(): void {
     this.dialogRef.close();

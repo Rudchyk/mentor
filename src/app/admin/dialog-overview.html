@@ -1,8 +1,11 @@
-<h1 mat-dialog-title>Hi {{data.name}}</h1>
 <div mat-dialog-content>
-  <p>What's your favorite animal?</p>
+  <p>Mentor name:</p>
   <mat-form-field>
-    <input matInput [(ngModel)]="data.animal">
+    <input matInput [(ngModel)]="data.name">
+  </mat-form-field>
+  <p>Occupation:</p>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.occupation">
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
