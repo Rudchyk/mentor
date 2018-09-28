@@ -1,25 +1,30 @@
 import { Component, OnInit } from '@angular/core';
+import { MysqlService } from '../mysql.service';
 
 @Component({
   selector: 'app-mentors-list',
   templateUrl: './mentors-list.component.html',
   styleUrls: ['./mentors-list.component.css']
 })
-export class MentorsListComponent {
+export class MentorsListComponent implements OnInit {
 
-  mentors = [
-    {
-      name: 'Yoda',
-      occupation: 'Jedi Master'
-    },
-    {
-      name: 'Splinter',
-      occupation: 'Highly skilled master of ninjutsu'
-    },
-    {
-      name: 'Professor X',
-      occupation: 'Master of mental-manipulation'
-    }
-  ];
+  mentors: ArrayBuffer;
+
+  constructor(
+    private mysqlService: MysqlService
+  ) { }
+
+  ngOnInit() {
+    this.fetchMentors();
+  }
+
+  fetchMentors(): void {
+    this.mysqlService
+      .getMysqlData(this.mentors)
+      .subscribe(
+        (mentors) => this.mentors = mentors,
+        (error) => console.log(error)
+      );
+  }
 
 }

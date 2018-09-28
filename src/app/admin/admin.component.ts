@@ -1,32 +1,33 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MysqlService } from '../mysql.service';
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.css']
 })
-export class AdminComponent {
+export class AdminComponent implements OnInit {
 
   displayedColumns: string[] = ['name', 'occupation', 'edit'];
-  mentors = [
-    {
-      name: 'Yoda',
-      occupation: 'Jedi Master'
-    },
-    {
-      name: 'Splinter',
-      occupation: 'Highly skilled master of ninjutsu'
-    },
-    {
-      name: 'Professor X',
-      occupation: 'Master of mental-manipulation'
-    }
-  ];
-  dataSource = this.mentors;
+  dataSource: ArrayBuffer;
+
+  ngOnInit() {
+    this.fetchMentors();
+  }
+
+  fetchMentors(): void {
+    this.mysqlService
+      .getMysqlData(this.dataSource)
+      .subscribe(
+        (mentors) => this.dataSource = mentors,
+        (error) => console.log(error)
+      );
+  }
 
   constructor(
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private mysqlService: MysqlService
   ) { }
 
   openDialog(name, occupation): void {
