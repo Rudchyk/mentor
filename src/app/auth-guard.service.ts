@@ -14,4 +14,9 @@ export class AuthGuardService {
   canActivate() {
     return of(this.loginService.isUserLoggedIn());
   }
+
+  currentUser() {
+    return this.loginService.currentUserName();
+  }
+
 }

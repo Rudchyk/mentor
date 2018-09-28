@@ -19,4 +19,8 @@ export class AppComponent {
     return this.authGuardService.canActivate();
   }
 
+  currentUserName() {
+    return this.authGuardService.currentUser();
+  }
+
 }

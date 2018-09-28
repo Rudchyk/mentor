@@ -7,10 +7,11 @@
       routerLink="/login"
       color="accent"
       routerLinkActive="active"
-      *ngIf="!isLoggedIn().value"
+      *ngIf="!isLoggedIn().value; else elseBlock"
     >
       Log In
     </a>
+    <ng-template #elseBlock>Welcome {{ currentUserName() }}</ng-template>
   </mat-toolbar-row>
 </mat-toolbar>
 <router-outlet></router-outlet>

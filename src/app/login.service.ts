@@ -26,4 +26,7 @@ export class LoginService {
   isUserLoggedIn() {
     return this.isLoggedIn;
   }
+  currentUserName() {
+    return this.currentUser;
+  }
 }
