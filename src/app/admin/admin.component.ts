@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { MysqlService } from '../mysql.service';
+import { BehaviorSubject } from 'rxjs'
 
 @Component({
   selector: 'app-admin',
@@ -10,7 +11,7 @@ import { MysqlService } from '../mysql.service';
 export class AdminComponent implements OnInit {
 
   displayedColumns: string[] = ['name', 'occupation', 'edit'];
-  dataSource: ArrayBuffer;
+  dataSource = new BehaviorSubject([]);
 
   ngOnInit() {
     this.fetchMentors();
@@ -20,7 +21,7 @@ export class AdminComponent implements OnInit {
     this.mysqlService
       .getMysqlData(this.dataSource)
       .subscribe(
-        (mentors) => this.dataSource = mentors,
+        (mentors: any) => this.dataSource.next(mentors),
         (error) => console.log(error)
       );
   }
@@ -30,17 +31,35 @@ export class AdminComponent implements OnInit {
     private mysqlService: MysqlService
   ) { }
 
-  openDialog(name, occupation): void {
+  openDialog(value): void {
+    const data = {
+      id: '',
+      name: '',
+      occupation: ''
+    };
+
+    if (value) {
+      data.id = value.id;
+      data.name = value.name;
+      data.occupation = value.occupation;
+    }
     const dialogRef = this.dialog.open(DialogOverviewComponent, {
       width: '500px',
-      data: {
-        name,
-        occupation
-      }
+      data
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
+      if (result.id === '') {
+        this.dataSource.next([...this.dataSource.getValue(), result]);
+      } else {
+        this.dataSource.value.map(element => {
+          if (element.id === result.id) {
+            element.name = result.name;
+            element.occupation = result.occupation;
+          }
+        });
+      }
     });
   }
 
@@ -55,8 +74,11 @@ export class DialogOverviewComponent {
 
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewComponent>,
+    private mysqlService: MysqlService,
     @Inject(MAT_DIALOG_DATA) public data
-  ) {}
+  ) {
+    // console.log(this.data);
+  }
 
   onNoClick(): void {
     this.dialogRef.close();
