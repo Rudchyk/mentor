@@ -6,7 +6,7 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 $data = json_decode( file_get_contents('php://input'),true );
 // var_dump($data);
 
-$mysqli = new mysqli('localhost','rudchyk','adY02E5j3i','rudchyk_mentors');
+$mysqli = new mysqli(__data__);
 
 /* check connection */
 if (mysqli_connect_errno()) {

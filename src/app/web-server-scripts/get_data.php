@@ -5,7 +5,7 @@ header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Content-Type: application/json; charset=UTF-8");
 getData();
 function getData(){
-    $conn = new mysqli('localhost','rudchyk','adY02E5j3i','rudchyk_mentors');
+    $conn = new mysqli(__data__);
     $result = $conn->query("SELECT * FROM mentors");
     $mentors = array();
     while($rs = $result->fetch_array(MYSQLI_ASSOC)) {
