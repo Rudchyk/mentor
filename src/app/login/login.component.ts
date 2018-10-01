@@ -17,7 +17,7 @@ export class LoginComponent {
   ) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required]],
-      password: ['', [Validators.required]]
+      password: ['', [this.passwordValidator, Validators.required]]
     });
   }
 
@@ -25,4 +25,25 @@ export class LoginComponent {
     this.loginService
       .login(this.loginForm.value.username, this.loginForm.value.password);
   }
+
+  passwordValidator(control) {
+    if (control.value.indexOf('admin') === 0) {
+      return null;
+    } else {
+      return {
+        passworkMask: true
+      };
+    }
+  }
+
+  passwordSuggestionError() {
+    const password = this.loginForm.controls.password;
+    return password.invalid && !password.errors.required && password.errors.passworkMask;
+  }
+
+  fieldRequiredError(type) {
+    const field = this.loginForm.controls[type];
+    return field.invalid && field.errors.required;
+  }
+
 }

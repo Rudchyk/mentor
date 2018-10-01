@@ -12,21 +12,32 @@
               name="username"
               formControlName="username"
             >
+            <mat-hint>You can use any name what you want</mat-hint>
+            <mat-error *ngIf="fieldRequiredError('username')">
+                This field is required
+            </mat-error>
           </mat-form-field>
           <mat-form-field class="login-panel__form-field">
             <input
-              matInput
-              placeholder="Enter your password"
-              [type]="hide ? 'password' : 'text'"
-              name="password"
-              formControlName="password"
-            >
-            <mat-icon
-              matSuffix
-              (click)="hide = !hide"
-            >
-              {{hide ? 'visibility' : 'visibility_off'}}
-          </mat-icon>
+                matInput
+                placeholder="Enter your password"
+                [type]="hide ? 'password' : 'text'"
+                name="password"
+                formControlName="password"
+              >
+              <mat-icon
+                matSuffix
+                (click)="hide = !hide"
+              >
+                {{hide ? 'visibility' : 'visibility_off'}}
+            </mat-icon>
+            <mat-hint>Try to type any symbols what you want</mat-hint>
+            <mat-error *ngIf="fieldRequiredError('password')">
+                This field is required
+            </mat-error>
+            <mat-error *ngIf="passwordSuggestionError()">
+                This field has to be "admin" to enter
+            </mat-error>
           </mat-form-field>
       </mat-card-content>
       <mat-card-actions>

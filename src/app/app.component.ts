@@ -9,7 +9,7 @@ import { AuthGuardService } from './auth-guard.service';
 })
 export class AppComponent {
 
-  title = 'Mentors List';
+  title = 'Mentors App';
 
   constructor(
     private authGuardService: AuthGuardService,

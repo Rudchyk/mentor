@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class AdminComponent implements OnInit {
 
-  displayedColumns: string[] = ['name', 'occupation', 'edit'];
+  displayedColumns: string[] = ['id', 'name', 'occupation', 'edit'];
   dataSource = new BehaviorSubject([]);
 
   saveState = false;
@@ -24,7 +24,12 @@ export class AdminComponent implements OnInit {
     this.mysqlService
       .getMysqlData()
       .subscribe(
-        (mentors: any) => this.dataSource.next(mentors),
+        (mentors: any) => {
+          const sortMentors = mentors.sort(function(a, b) {
+            return a.id - b.id  ||  a.name.localeCompare(b.name);
+          });
+          this.dataSource.next(sortMentors);
+        },
         (error) => console.log(error)
       );
   }
@@ -48,16 +53,22 @@ export class AdminComponent implements OnInit {
   ) { }
 
   openDialog(value): void {
-    const data = {
-      id: '',
-      name: '',
-      occupation: ''
-    };
+    let data;
 
     if (value) {
-      data.id = value.id;
-      data.name = value.name;
-      data.occupation = value.occupation;
+      data = {
+        id: value.id,
+        name: value.name,
+        occupation: value.occupation,
+        new: false
+      };
+    } else {
+      data = {
+        id: `${this.dataSource.value.length + 1}`,
+        name: '',
+        occupation: '',
+        new: true
+      };
     }
     const dialogRef = this.dialog.open(DialogOverviewComponent, {
       width: '500px',
@@ -66,7 +77,8 @@ export class AdminComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      if (result.id === '') {
+
+      if (result.new) {
         this.dataSource.next([...this.dataSource.getValue(), result]);
         this.saveState = true;
       } else {

@@ -1,4 +1,11 @@
 
 Todo:
-  ☐ Routing
+  ☐ Correct data for login
+  ☐ Correct data for mysql
+  ☐ Save data for login in cookie|local storage
+  ☐ Log out action
+  ☐ Delete data row from admin panel
+  ☐ Build for prod
+
+
 

@@ -1,6 +1,6 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
-    <span>Welcome to {{ title }}!</span>
+    <span>{{ title }}!</span>
     <span class="spacer"></span>
     <a
       mat-flat-button
@@ -11,7 +11,13 @@
     >
       Log In
     </a>
-    <ng-template #elseBlock>Welcome {{ currentUserName() }}</ng-template>
+    <ng-template #elseBlock>
+      Welcome&nbsp;<a routerLink="/admin" class="admin-link" >{{ currentUserName() }}</a>.
+      &nbsp;
+      <a mat-mini-fab color="accent" title="Log Out">
+        <mat-icon aria-label="Log Out">directions_run</mat-icon>
+      </a>
+    </ng-template>
   </mat-toolbar-row>
 </mat-toolbar>
 <router-outlet></router-outlet>

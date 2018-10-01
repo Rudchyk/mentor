@@ -1,8 +1,15 @@
 <div class="content">
+  <p>
+    <app-back-to-home></app-back-to-home>
+  </p>
   <div class="admin__save-panel">
     <a mat-raised-button color="warn" *ngIf="saveState" (click)="saveData()">Save all changes</a>
   </div>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> # </th>
+      <td mat-cell *matCellDef="let element"> {{ element.id }} </td>
+    </ng-container>
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef> Mentor name </th>
       <td mat-cell *matCellDef="let element"> {{ element.name }} </td>
@@ -23,6 +30,6 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
   <p>
-    <a mat-raised-button color="primary" (click)="openDialog()">Add new mentor</a>
+    <a mat-raised-button color="accent" (click)="openDialog()">+ Add new mentor</a>
   </p>
 </div>
