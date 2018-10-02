@@ -14,7 +14,7 @@ export class LoginService {
   ) { }
 
   login(username, password) {
-     if (username === 'admin') {
+     if (password === 'admin') {
       this.currentUser = username;
       this.isLoggedIn = true;
       this.router.navigate(['/admin']);

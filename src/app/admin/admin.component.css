@@ -1,11 +1,14 @@
 table {
     width: 100%;
 }
-.mat-column-edit {
-    width: 24px;
-    padding-right: 0;
+.mat-column-actions {
+    text-align: right;
+}
+.mat-mini-fab {
+    margin-left: 10px;
 }
 .admin__save-panel {
-    text-align: right;
+    display: flex;
+    justify-content: space-between;
     margin-bottom: 15px;
 }
