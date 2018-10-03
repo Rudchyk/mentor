@@ -5,6 +5,12 @@ import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { log } from 'util';
 
+// STATUSES
+const STATIC = 0,
+  CHANGED = 1,
+  NEW = 2,
+  REMOVED = 3;
+
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
@@ -16,8 +22,6 @@ export class AdminComponent implements OnInit {
   dataSource = new BehaviorSubject([]);
   saveState = false;
   deletedRows: any[] = [];
-  updatedRows: any[] = [];
-  addedRows: any[] = [];
 
   ngOnInit() {
     this.fetchMentors();
@@ -37,25 +41,32 @@ export class AdminComponent implements OnInit {
 
   prepareTheMentors(arr: any): void {
     arr.sort(function(a, b) {
-      return a.id - b.id  ||  a.name.localeCompare(b.name);
+      return a.name - b.name  ||  a.name.localeCompare(b.name);
     });
-    arr.map((element, index) => {
-      element.position = index + 1;
+    arr.map(element => {
+      element.status = STATIC;
     });
   }
 
   saveData(): void {
-    const data = {
-      updated: this.updatedRows,
-      deleted: this.deletedRows,
-      added: this.addedRows
-    };
-    console.log('sent data: ', data);
+    const dataSourceArr: any[] = this.dataSource.getValue(),
+      sortedDataSource = dataSourceArr.filter(element => {
+        return element.status !== STATIC;
+      }),
+      mysqlData = sortedDataSource.concat(this.deletedRows);
+    mysqlData.map(element => {
+      if (element.status === NEW) {
+        delete element.id;
+      }
+    });
     this.mysqlService
-      .postMysqlData(data)
+      .postMysqlData(mysqlData)
       .subscribe(
-        (res) => {
+        (res: any[]) => {
+          alert(res.join('\n'));
           console.log('response from the server:', res);
+          this.fetchMentors();
+          this.deletedRows = [];
           this.saveState = false;
         },
         (error) => console.log(error)
@@ -67,56 +78,45 @@ export class AdminComponent implements OnInit {
     dataSourceArr.forEach((item, index) => {
       if (item === element) {
         dataSourceArr.splice(index, 1);
-        this.deletedRows.push({
-          name: element.name,
-          id: element.id
-        });
+        if (element.status !== NEW) {
+          this.deletedRows.push({
+            name: element.name,
+            id: element.id,
+            status: REMOVED
+          });
+        }
       }
-    });
-    dataSourceArr.map((item: any, index) => {
-      item.position = index + 1;
     });
     this.dataSource.next(dataSourceArr);
     this.saveState = true;
   }
 
   addMentor(element: any): void {
-    const dataSourceArr: any[] = this.dataSource.getValue();
-    this.addedRows.push(element);
-    element.position = dataSourceArr.length + 1;
+    const dataSourceArr: any[] = this.dataSource.getValue(),
+      date = new Date();
+    element.id = date.getTime();
+    element.status = NEW;
     this.dataSource.next([...dataSourceArr, element]);
     this.saveState = true;
   }
 
-  updateMentor(oldData: any, newData: any): void {
+  updateMentor(oldData: any, newData: any, index: number): void {
     const dataSourceArr: any[] = this.dataSource.getValue(),
-      position = oldData.position - 1,
-      element = dataSourceArr[position];
+      element = dataSourceArr[index];
     let updated = false;
 
     if (oldData.name !== newData.name) {
-      dataSourceArr[position].name = newData.name;
+      dataSourceArr[index].name = newData.name;
       updated = true;
     }
     if (oldData.occupation !== newData.occupation) {
-      dataSourceArr[position].occupation = newData.occupation;
+      dataSourceArr[index].occupation = newData.occupation;
       updated = true;
     }
 
     if (updated) {
-      if (this.updatedRows.length) {
-        const udpatedRowsArr = this.updatedRows.map(item => {
-            return item.id;
-          }),
-          udpatedRowPosition = udpatedRowsArr.indexOf(element.id);
-        if (udpatedRowPosition === -1) {
-          this.updatedRows.push(element);
-        } else {
-          this.updatedRows[udpatedRowPosition].name = element.name;
-          this.updatedRows[udpatedRowPosition].occupation = element.occupation;
-        }
-      } else {
-        this.updatedRows.push(element);
+      if (element.status !== NEW) {
+        dataSourceArr[index].status = CHANGED;
       }
       this.dataSource.next(dataSourceArr);
       this.saveState = true;
@@ -129,8 +129,7 @@ export class AdminComponent implements OnInit {
     private router: Router
   ) { }
 
-  openDialog(value): void {
-    console.log('value', value);
+  openDialog(value, index): void {
     const dialogRef = this.dialog.open(DialogOverviewComponent, {
       width: '500px',
       data: {
@@ -146,7 +145,7 @@ export class AdminComponent implements OnInit {
       } else if (!value) {
         this.addMentor(result);
       } else {
-        this.updateMentor(value, result);
+        this.updateMentor(value, result, index);
       }
     });
   }

@@ -3,14 +3,10 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: PUT, GET, POST");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 
-$mysqli = new mysqli('localhost','rudchyk','adY02E5j3i','rudchyk_mentors');
-$dataObj = json_decode( file_get_contents('php://input'),true );
-$data = $dataObj['data'];
+$mysqli = new mysqli(__data__);
+$mysqlTable = 'mentors';
+$data = json_decode( file_get_contents('php://input'),true );
 $response = array();
-
-$deletedRows = $dataObj['deleted'];
-$updatedRows = $dataObj['updated'];
-$addedRows = $dataObj['added'];
 
 /* check connection */
 if (mysqli_connect_errno()) {
@@ -18,55 +14,39 @@ if (mysqli_connect_errno()) {
     exit();
 }
 
-for($i = 0; $i < count($updatedRows); ++$i) {
-    $updatedRow = $updatedRows[$i];
-    $updatedRowID =  $updatedRow['id'];
-    $updatedRowName =  $updatedRow['name'];
-    $updatedRowOccupation =  $updatedRow['occupation'];
-    $updatedRowSql = "UPDATE mentors SET name='".$updatedRowName."', occupation='".$updatedRowOccupation."'  WHERE id=".$updatedRowID;
-    $updatedRowResult = $mysqli->query($updatedRowSql);
+for($i = 0; $i < count($data); ++$i) {
+    $item = $data[$i];
+    $itemStatus = $item['status'];
+    $itemID =  $item['id'];
+    $itemName =  $item['name'];
+    $itemOccupation =  $item['occupation'];
     
-    if ($updatedRowResult === true) {
-        $updatedRowMessage = $updatedRowName." was updated successfully";
+    switch ($itemStatus) {
+        case 1:
+            $sql = "UPDATE ".$mysqlTable." SET name='".$itemName."', occupation='".$itemOccupation."'  WHERE id=".$itemID;
+            $action = "updat";
+            break;
+        case 2:
+            $sql = "INSERT INTO ".$mysqlTable."(id,name,occupation) values('','".$itemName."','".$itemOccupation."')";
+            $action = "add";
+            break;
+        case 3:
+            $sql = "DELETE FROM ".$mysqlTable." WHERE id=".$itemID;
+            $action = "remov";
+            break;
+    }
+        
+    $result = $mysqli->query($sql);
+    
+    if ($result === true) {
+        $message = $itemName." was ".$action."ed successfully";
     } else {
-        $updatedRowMessage = "Error with updating ".$updatedRowName." ".$mysqli->error;
+        $message = "Error with ".$action."ing ".$itemName." ".$mysqli->error;
     }
     
-    array_push($response, $updatedRowMessage);
+    array_push($response, $message);
 }
 
-for($i = 0; $i < count($addedRows); ++$i) {
-    $addedRow = $addedRows[$i];
-    $addedRowID =  '';
-    $addedRowName =  $addedRow['name'];
-    $addedRowOccupation =  $addedRow['occupation'];
-    $addedRowSql = "INSERT INTO mentors(id,name,occupation) values('.$addedRowID.','".$addedRowName."','".$addedRowOccupation."')";
-    $addedRowResult = $mysqli->query($addedRowSql);
-    
-    if ($addedRowResult === true) {
-        $addedRowMessage = $addedRowName." was added successfully";
-    } else {
-        $addedRowMessage = "Error with adding ".$addedRowName." ".$mysqli->error;
-    }
-    
-    array_push($response, $addedRowMessage);
-}
-
-for($i = 0; $i < count($deletedRows); ++$i) {
-    $deletedRow = $deletedRows[$i];
-    $deletedRowID =  $deletedRow['id'];
-    $deletedRowName =  $deletedRow['name'];
-    $deletedRowSql = "DELETE FROM mentors WHERE id=".$deletedRowID;
-    $deletedRowResult = $mysqli->query($deletedRowSql);
-    
-    if ($deletedRowResult === true) {
-        $deletedRowMessage = $deletedRowName." was deleted successfully";
-    } else {
-        $deletedRowMessage = "Error with deleting ".$deletedRowName." ".$mysqli->error;
-    }
-    
-    array_push($response, $deletedRowMessage);
-}
 
 echo json_encode($response);
 
