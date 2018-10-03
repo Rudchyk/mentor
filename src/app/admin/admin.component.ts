@@ -88,7 +88,17 @@ export class AdminComponent implements OnInit {
       }
     });
     this.dataSource.next(dataSourceArr);
-    this.saveState = true;
+    this.checkToSave();
+  }
+
+  checkToSave() {
+    const dataSourceArr: any[] = this.dataSource.getValue(),
+      changedData = dataSourceArr.some(element => {
+        return element.status > 0;
+      }),
+      deletedData = this.deletedRows.length > 0;
+
+    this.saveState = changedData || deletedData;
   }
 
   addMentor(element: any): void {
@@ -97,7 +107,7 @@ export class AdminComponent implements OnInit {
     element.id = date.getTime();
     element.status = NEW;
     this.dataSource.next([...dataSourceArr, element]);
-    this.saveState = true;
+    this.checkToSave();
   }
 
   updateMentor(oldData: any, newData: any, index: number): void {
@@ -119,7 +129,7 @@ export class AdminComponent implements OnInit {
         dataSourceArr[index].status = CHANGED;
       }
       this.dataSource.next(dataSourceArr);
-      this.saveState = true;
+      this.checkToSave();
     }
   }
 
