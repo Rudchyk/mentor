@@ -14,6 +14,7 @@ import {
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { CookieModule } from 'ngx-cookie';
 
 import { AuthGuardService } from './auth-guard.service';
 
@@ -54,6 +55,7 @@ const appRoutes: Routes = [
   ],
   imports: [
     RouterModule.forRoot(appRoutes),
+    CookieModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,

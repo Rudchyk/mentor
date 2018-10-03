@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 import { AuthGuardService } from './auth-guard.service';
+import { LoginService } from './login.service';
 
 @Component({
   selector: 'app-root',
@@ -12,15 +13,21 @@ export class AppComponent {
   title = 'Mentors App';
 
   constructor(
-    private authGuardService: AuthGuardService,
+    private loginService: LoginService
   ) { }
 
-  isLoggedIn() {
-    return this.authGuardService.canActivate();
+  isUserLoggedIn() {
+    return this.loginService.isUserLoggedIn();
   }
 
   currentUserName() {
-    return this.authGuardService.currentUser();
+    return this.loginService.currentUserName();
   }
+
+  logOut() {
+    return this.loginService.logOut();
+  }
+
+
 
 }

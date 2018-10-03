@@ -7,15 +7,15 @@
       routerLink="/login"
       color="accent"
       routerLinkActive="active"
-      *ngIf="!isLoggedIn().value; else elseBlock"
+      *ngIf="!isUserLoggedIn(); else elseBlock"
     >
       Log In
     </a>
     <ng-template #elseBlock>
       Welcome&nbsp;<a routerLink="/admin" class="admin-link" >{{ currentUserName() }}</a>.
       &nbsp;
-      <a mat-mini-fab color="accent" title="Log Out">
-        <mat-icon aria-label="Log Out">directions_run</mat-icon>
+      <a mat-mini-fab color="accent" title="Log Out" (click)="logOut()">
+        <mat-icon aria-label="Log Out" >directions_run</mat-icon>
       </a>
     </ng-template>
   </mat-toolbar-row>

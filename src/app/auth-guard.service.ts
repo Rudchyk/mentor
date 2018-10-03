@@ -15,8 +15,4 @@ export class AuthGuardService {
     return of(this.loginService.isUserLoggedIn());
   }
 
-  currentUser() {
-    return this.loginService.currentUserName();
-  }
-
 }
