@@ -2,8 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { MysqlService } from '../mysql.service';
 import { BehaviorSubject } from 'rxjs';
-import { Router } from '@angular/router';
-import { AreYouSureDialogComponent } from '../are-you-sure-dialog/are-you-sure-dialog.component';
+import { AreYouSureService } from '../are-you-sure.service';
 
 // STATUSES
 const STATIC = 0,
@@ -26,6 +25,12 @@ export class AdminComponent implements OnInit {
   ngOnInit() {
     this.fetchMentors();
   }
+
+  constructor(
+    public dialog: MatDialog,
+    private mysqlService: MysqlService,
+    private areYouSureService: AreYouSureService
+  ) { }
 
   fetchMentors(): void {
     this.mysqlService
@@ -133,12 +138,6 @@ export class AdminComponent implements OnInit {
     }
   }
 
-  constructor(
-    public dialog: MatDialog,
-    private mysqlService: MysqlService,
-    private router: Router
-  ) { }
-
   openDialog(value, index): void {
     const dialogRef = this.dialog.open(DialogOverviewComponent, {
       width: '500px',
@@ -161,11 +160,7 @@ export class AdminComponent implements OnInit {
   }
 
   openAreYouSureDialog(element: any): void {
-    const dialogRef = this.dialog.open(AreYouSureDialogComponent, {
-      width: '250px'
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
+    this.areYouSureService.settings().subscribe(result => {
       console.log('The are you sure dialog was closed');
       if (result) {
         this.deleteMentor(element);
