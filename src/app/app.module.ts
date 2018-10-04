@@ -23,6 +23,7 @@ import { MentorsListComponent } from './mentors-list/mentors-list.component';
 import { LoginComponent } from './login/login.component';
 import { AdminComponent, DialogOverviewComponent } from './admin/admin.component';
 import { BackToHomeComponent } from './back-to-home/back-to-home.component';
+import { AreYouSureDialogComponent } from './are-you-sure-dialog/are-you-sure-dialog.component';
 
 const appRoutes: Routes = [
   {
@@ -51,7 +52,8 @@ const appRoutes: Routes = [
     LoginComponent,
     AdminComponent,
     BackToHomeComponent,
-    DialogOverviewComponent
+    DialogOverviewComponent,
+    AreYouSureDialogComponent
   ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -71,7 +73,10 @@ const appRoutes: Routes = [
     MatDialogModule
   ],
   providers: [],
-  entryComponents: [DialogOverviewComponent],
+  entryComponents: [
+    DialogOverviewComponent,
+    AreYouSureDialogComponent
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

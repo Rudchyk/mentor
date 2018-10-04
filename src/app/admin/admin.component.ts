@@ -3,7 +3,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { MysqlService } from '../mysql.service';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
-import { log } from 'util';
+import { AreYouSureDialogComponent } from '../are-you-sure-dialog/are-you-sure-dialog.component';
 
 // STATUSES
 const STATIC = 0,
@@ -156,6 +156,19 @@ export class AdminComponent implements OnInit {
         this.addMentor(result);
       } else {
         this.updateMentor(value, result, index);
+      }
+    });
+  }
+
+  openAreYouSureDialog(element: any): void {
+    const dialogRef = this.dialog.open(AreYouSureDialogComponent, {
+      width: '250px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The are you sure dialog was closed');
+      if (result) {
+        this.deleteMentor(element);
       }
     });
   }

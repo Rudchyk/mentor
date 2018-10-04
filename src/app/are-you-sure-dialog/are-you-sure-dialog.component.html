@@ -1,0 +1,7 @@
+<div mat-dialog-title>
+  Are you sure?
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="warn" (click)="onNoClick()">No Thanks</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="true">I am sure</button>
+</div>
