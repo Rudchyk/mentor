@@ -11,12 +11,16 @@ export class AreYouSureService {
     public dialog: MatDialog
   ) { }
 
-  settings() {
+  afterClosed(callback: any) {
     const dialogRef = this.dialog.open(AreYouSureDialogComponent, {
       width: '250px'
     });
 
-    return dialogRef.afterClosed();
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        callback();
+      }
+    });
   }
 
 }

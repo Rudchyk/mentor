@@ -21,7 +21,7 @@ import { AuthGuardService } from './auth-guard.service';
 import { AppComponent } from './app.component';
 import { MentorsListComponent } from './mentors-list/mentors-list.component';
 import { LoginComponent } from './login/login.component';
-import { AdminComponent, DialogOverviewComponent } from './admin/admin.component';
+import { AdminComponent, DialogOverviewComponent, ServerResponseDialogComponent } from './admin/admin.component';
 import { BackToHomeComponent } from './back-to-home/back-to-home.component';
 import { AreYouSureDialogComponent } from './are-you-sure-dialog/are-you-sure-dialog.component';
 
@@ -37,7 +37,7 @@ const appRoutes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
-    // canActivate: [AuthGuardService]
+    canActivate: [AuthGuardService]
   },
   {
     path: '**',
@@ -53,7 +53,8 @@ const appRoutes: Routes = [
     AdminComponent,
     BackToHomeComponent,
     DialogOverviewComponent,
-    AreYouSureDialogComponent
+    AreYouSureDialogComponent,
+    ServerResponseDialogComponent
   ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -75,7 +76,8 @@ const appRoutes: Routes = [
   providers: [],
   entryComponents: [
     DialogOverviewComponent,
-    AreYouSureDialogComponent
+    AreYouSureDialogComponent,
+    ServerResponseDialogComponent
   ],
   bootstrap: [AppComponent]
 })

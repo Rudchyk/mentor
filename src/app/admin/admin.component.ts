@@ -68,8 +68,10 @@ export class AdminComponent implements OnInit {
       .postMysqlData(mysqlData)
       .subscribe(
         (res: any[]) => {
-          alert(res.join('\n'));
-          console.log('response from the server:', res);
+          this.dialog.open(ServerResponseDialogComponent, {
+            width: '500px',
+            data: res
+          });
           this.fetchMentors();
           this.deletedRows = [];
           this.saveState = false;
@@ -148,7 +150,6 @@ export class AdminComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
       if (!result) {
         return false;
       } else if (!value) {
@@ -160,11 +161,8 @@ export class AdminComponent implements OnInit {
   }
 
   openAreYouSureDialog(element: any): void {
-    this.areYouSureService.settings().subscribe(result => {
-      console.log('The are you sure dialog was closed');
-      if (result) {
-        this.deleteMentor(element);
-      }
+    this.areYouSureService.afterClosed(() => {
+      this.deleteMentor(element);
     });
   }
 
@@ -185,5 +183,19 @@ export class DialogOverviewComponent {
   onNoClick(): void {
     this.dialogRef.close();
   }
+
+}
+
+@Component({
+  selector: 'app-server-response-dialog',
+  templateUrl: './server-response-dialog.html',
+  styleUrls: ['./server-response-dialog.css']
+})
+export class ServerResponseDialogComponent {
+
+  constructor(
+    public dialogRef: MatDialogRef<ServerResponseDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data
+  ) { }
 
 }
