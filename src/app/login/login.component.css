@@ -1,5 +1,5 @@
 .login-panel {
-    width: 500px;
+    max-width: 500px;
     margin: auto;
 }
 .login-panel__form-field {
@@ -14,4 +14,10 @@ mat-card-actions {
 }
 .mat-card-header {
     display: block;
+}
+@media only screen and (max-width: 600px) {
+    .mat-list {
+        margin-left: 15px;
+        margin-right: 15px;
+    }
 }
