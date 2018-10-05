@@ -3,7 +3,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: PUT, GET, POST");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 
-$mysqli = new mysqli(__data__);
+$mysqli = new mysqli('localhost','rudchyk','adY02E5j3i','rudchyk_mentors');
 $mysqlTable = 'mentors';
 $data = json_decode( file_get_contents('php://input'),true );
 $response = array();
@@ -39,14 +39,17 @@ for($i = 0; $i < count($data); ++$i) {
     $result = $mysqli->query($sql);
     
     if ($result === true) {
-        $message = $itemName." was ".$action."ed successfully";
+        $message = "success";
     } else {
-        $message = "Error with ".$action."ing ".$itemName." ".$mysqli->error;
+        $message = "error: ".$mysqli->error;
     }
     
-    array_push($response, $message);
+    array_push($response, [
+        "name" => $itemName,
+        "status" => $itemStatus,
+        "result" => $message
+    ]);
 }
-
 
 echo json_encode($response);
 

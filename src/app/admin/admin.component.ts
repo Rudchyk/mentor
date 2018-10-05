@@ -201,32 +201,36 @@ export class ServerResponseDialogComponent implements OnInit {
   ) { }
 
   prepearResponse(): void {
-    const reg = {
-      removed: new RegExp('removed'),
-      added: new RegExp('added'),
-      edited: new RegExp('updated')
-    };
-
     this.data.forEach(element => {
       const elementObj: any = {
-          message: element,
+          message: '',
           icon: ''
         };
+      let keyWord = '';
 
-      if (reg.removed.test(element)) {
-        elementObj.icon = 'delete_forever';
-      } else if (reg.added.test(element)) {
-        elementObj.icon = 'add_to_photos';
-      } else if (reg.edited.test(element)) {
-        elementObj.icon = 'cached';
+      if (element.result === 'success') {
+        switch (element.status) {
+          case CHANGED:
+            elementObj.icon = 'cached';
+            keyWord = 'updated';
+            break;
+          case NEW:
+            elementObj.icon = 'add_to_photos';
+            keyWord = 'added';
+            break;
+          case REMOVED:
+            elementObj.icon = 'delete_forever';
+            keyWord = 'removed';
+            break;
+        }
+        elementObj.message = `${element.name} was ${keyWord} successfully`;
       } else {
         elementObj.icon = 'mood_bad';
+        elementObj.message = `Something went wrong with ${element.name}, please see error into the console`;
       }
 
       this.info.push(elementObj);
     });
-
-    console.log(this.info);
   }
 
   ngOnInit() {
