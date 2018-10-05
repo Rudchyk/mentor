@@ -9,3 +9,9 @@ mat-card-actions {
     display: flex;
     justify-content: space-between
 }
+.mat-card-header {
+    text-align: center;
+}
+.mat-card-header {
+    display: block;
+}
