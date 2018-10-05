@@ -191,11 +191,46 @@ export class DialogOverviewComponent {
   templateUrl: './server-response-dialog.html',
   styleUrls: ['./server-response-dialog.css']
 })
-export class ServerResponseDialogComponent {
+export class ServerResponseDialogComponent implements OnInit {
+
+  info: any[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<ServerResponseDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data
   ) { }
+
+  prepearResponse(): void {
+    const reg = {
+      removed: new RegExp('removed'),
+      added: new RegExp('added'),
+      edited: new RegExp('updated')
+    };
+
+    this.data.forEach(element => {
+      const elementObj: any = {
+          message: element,
+          icon: ''
+        };
+
+      if (reg.removed.test(element)) {
+        elementObj.icon = 'delete_forever';
+      } else if (reg.added.test(element)) {
+        elementObj.icon = 'add_to_photos';
+      } else if (reg.edited.test(element)) {
+        elementObj.icon = 'cached';
+      } else {
+        elementObj.icon = 'mood_bad';
+      }
+
+      this.info.push(elementObj);
+    });
+
+    console.log(this.info);
+  }
+
+  ngOnInit() {
+    this.prepearResponse();
+  }
 
 }
